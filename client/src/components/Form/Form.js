@@ -3,6 +3,7 @@ import useStyles from './styles';
 import { TextField, Button, Typography, Paper } from '@material-ui/core';
 import { useDispatch, useSelector } from 'react-redux';
 import FileBase from 'react-file-base64';
+import { createPost } from '../../actions/posts';
 
 const Form = ({ currentId, setCurrentId }) => {
 
@@ -12,13 +13,20 @@ const Form = ({ currentId, setCurrentId }) => {
   const post = useSelector((state) => (currentId ? state.posts.find((message) => message._id === currentId) : null));
 
   const classes = useStyles();
+  const dispatch = useDispatch();
 
   const clear = () => {
     setCurrentId(0);
     setPostData({ creator: '', title: '', message: '', tags: '', selectedFile: '' });
   };
 
-  const handleSubmit = () => {};
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    dispatch(createPost(postData));
+  };
+
+
   return (
     <Paper className={classes.paper}>
           <form autoComplete="off" noValidate className={`${classes.root} ${classes.form}`} onSubmit={handleSubmit}>
