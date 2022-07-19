@@ -8,7 +8,9 @@ import Icon from './icon';
 import { useDispatch } from 'react-redux';
 import jwt_decode from 'jwt-decode';
 import { useNavigate } from 'react-router-dom';
+import { signUp, signIn } from '../../actions/auth';
 
+const initialState = { firstName: '', lastName: '', password: '', confirmPassword:'' }
 
 const Auth = () => {
 
@@ -17,17 +19,24 @@ const Auth = () => {
   const [isSignUp, setIsSignUp] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [formData, setFormData] = useState(initialState);
 
   const handleShowPassword = () => setShowPassword((prevShowPassword) => !prevShowPassword);
 
 
-  const handleSubmit = () => {
-
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    
+    if (isSignUp) {
+        dispatch(signUp(formData, navigate))
+    } else {
+        dispatch(signIn(formData, navigate))
+    }
   };
 
-  const handleChange = () => {
-
-  }
+  const handleChange = (e) => {
+    setFormData({...formData, [e.target.name]: e.target.value })
+  };
 
   const switchMode = () => {
     setIsSignUp((prevIsSignUp) => !prevIsSignUp)
@@ -61,8 +70,8 @@ const Auth = () => {
                 <Grid container spacing={2}>
                     {isSignUp && (
                         <>
-                            <Input name="first name" label="First Name" handleChange={handleChange} autoFocus half/>
-                            <Input name="last name" label="Last Name" handleChange={handleChange} half/>
+                            <Input name="firstName" label="First Name" handleChange={handleChange} autoFocus half/>
+                            <Input name="lastName" label="Last Name" handleChange={handleChange} half/>
                         </>
                     )}
                     <Input name="email" label="Email Address" handleChange={handleChange} type="email"/>
