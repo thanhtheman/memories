@@ -3,14 +3,23 @@ import { Avatar, Button, Paper, Grid, Typography, Container } from '@material-ui
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import useStyles from './styles';
 import Input from './Input';
+import { GoogleOAuthProvider, GoogleLogin, googleLogout } from '@react-oauth/google';
+import Icon from './icon';
+import { useDispatch } from 'react-redux';
+import jwt_decode from 'jwt-decode';
+import { useNavigate } from 'react-router-dom';
+
 
 const Auth = () => {
 
   const classes = useStyles();
   const [showPassword, setShowPassword] = useState(false);
   const [isSignUp, setIsSignUp] = useState(false);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const handleShowPassword = () => setShowPassword((prevShowPassword) => !prevShowPassword);
+
 
   const handleSubmit = () => {
 
@@ -19,9 +28,26 @@ const Auth = () => {
   const handleChange = () => {
 
   }
+
   const switchMode = () => {
     setIsSignUp((prevIsSignUp) => !prevIsSignUp)
     handleShowPassword(false);
+  }
+
+  const googleSuccess =  async (res) => {
+    const result = jwt_decode(res?.credential);
+    const token = res.credential;
+    console.log(res);
+    try {
+        dispatch({ type: 'AUTH', data: { result, token }});
+        navigate('/');
+    } catch (error) {
+        console.log(error)
+    }
+  }
+
+  const googleFailure = () => {
+    console.log('Google Sign In was failed!')
   }
 
   return (
@@ -41,8 +67,27 @@ const Auth = () => {
                     )}
                     <Input name="email" label="Email Address" handleChange={handleChange} type="email"/>
                     <Input name="password" label="Password" handleChange={handleChange} type={showPassword ? "text" : "password"} handleShowPassword={handleShowPassword}/>
-                    { isSignUp && <Input name="confirmPassowrd" label="Repeat Password" handleChange={handleChange} type="password" />}
+                    { isSignUp && <Input name="confirmPassword" label="Repeat Password" handleChange={handleChange} type="password" />}
                 </Grid>
+                <GoogleOAuthProvider clientId="605907920391-7p7r5s9rdssbmf4hn9bndflv4k24lrpf.apps.googleusercontent.com">
+                    <GoogleLogin 
+                        render={(renderProps) => (
+                            <Button
+                                className={classes.googleButton}
+                                color="primary"
+                                fullWidth
+                                onClick={renderProps.onClick}
+                                disabled={renderProps.disabled}
+                                startIcon={<Icon/>}
+                                variant="contained"
+                            >
+                                Google Sign In
+                            </Button>
+                        )}
+                        onSuccess={googleSuccess}
+                        onError={googleFailure}
+                    />
+                </GoogleOAuthProvider>
                 <Button type="submit" fullWidth variant="contained" color="primary" className={classes.submit}>
                     { isSignUp ? 'Sign Up' : 'Sign In'}
                 </Button>
