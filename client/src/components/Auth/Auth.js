@@ -8,9 +8,9 @@ import Icon from './icon';
 import { useDispatch } from 'react-redux';
 import jwt_decode from 'jwt-decode';
 import { useNavigate } from 'react-router-dom';
-import { signUp, signIn } from '../../actions/auth';
+import { signup, signin } from '../../actions/auth';
 
-const initialState = { firstName: '', lastName: '', password: '', confirmPassword:'' }
+const initialState = { firstName: '', lastName: '', email: '', password: '', confirmPassword: '' }
 
 const Auth = () => {
 
@@ -26,11 +26,11 @@ const Auth = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    
+    console.log(formData);
     if (isSignUp) {
-        dispatch(signUp(formData, navigate))
+        dispatch(signup(formData, navigate))
     } else {
-        dispatch(signIn(formData, navigate))
+        dispatch(signin(formData, navigate))
     }
   };
 
