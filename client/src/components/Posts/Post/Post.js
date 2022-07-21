@@ -17,7 +17,7 @@ const Post = ( {post, setCurrentId }) => {
     if (post.likes) {
       return post.likes.find((like) => like === (user?.result?.googleId || user?.result?._id))
         ? (
-          <><ThumbUpAltIcon fontSize="small" />&nbsp;{post.likes.length > 2 ? `You and ${post.likes.length - 1} others` : `${post.likes.length} like${post.likes.length > 1 ? 's' : ''}` }</>
+          <><ThumbUpAltIcon fontSize="small" />&nbsp;{post.likes.length > 2 ? `You and ${post.likes.length - 1} others Likes` : `${post.likes.length} like${post.likes.length > 1 ? 's' : ''}` }</>
         ) : (
           <><ThumbUpAltIcon fontSize="small" />&nbsp;{post.likes.length} {post.likes.length === 1 || post.likes.length === 0 ? 'Like' : 'Likes'}</>
         );
